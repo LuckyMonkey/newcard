@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://newcard.example/spec/schemas/resolution.schema.json",
+  "title": "ncNFC 0.1 resolution result",
+  "type": "object",
+  "required": ["protocol", "status"],
+  "properties": {
+    "protocol": { "const": "ncNFC/0.1" },
+    "status": { "enum": ["resolved", "not_found", "ambiguous"] },
+    "message": { "type": "string" },
+    "object": {
+      "type": "object",
+      "required": ["id", "kind", "title", "url"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^nc_[a-f0-9]{32}$" },
+        "kind": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": ["string", "null"] },
+        "url": { "type": "string", "format": "uri" },
+        "image": { "type": ["string", "null"], "format": "uri" }
+      },
+      "additionalProperties": false
+    },
+    "action": {
+      "type": "object",
+      "required": ["appId", "url"],
+      "properties": { "appId": { "type": "string" }, "url": { "type": "string", "format": "uri" } },
+      "additionalProperties": false
+    },
+    "binding": {
+      "type": "object",
+      "required": ["namespace", "assurance"],
+      "properties": {
+        "namespace": { "type": "string" },
+        "assurance": { "enum": ["unverified", "verified"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "namespace": "demo.restaurant",
+    "technology": "iso14443a",
+    "uid": "04:A2:7F:91",
+    "kind": "restaurant",
+    "title": "Example Restaurant Menu",
+    "description": "Synthetic card observation for ncNFC testing",
+    "url": "https://example.com/menu",
+    "apps": { "com.example.ordering": "https://example.com/order" }
+  },
+  {
+    "namespace": "demo.hotel",
+    "technology": "iso14443a",
+    "uid": "04:A2:7F:91",
+    "kind": "information",
+    "title": "Example Hotel Card",
+    "url": "https://example.com/hotel"
+  },
+  {
+    "namespace": "demo.inventory",
+    "technology": "iso15693",
+    "uid": "E004015023ABCD12",
+    "kind": "inventory.item",
+    "title": "Example Storage Bin",
+    "url": "https://example.com/inventory/1"
+  }
+]

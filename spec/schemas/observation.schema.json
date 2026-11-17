@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://newcard.example/spec/schemas/observation.schema.json",
+  "title": "ncNFC 0.1 resolution observation",
+  "type": "object",
+  "required": ["technology", "uid"],
+  "properties": {
+    "technology": { "enum": ["iso14443a", "iso14443b", "iso15693", "felica"] },
+    "uid": { "type": "string", "pattern": "^[A-Fa-f0-9: -]+$", "maxLength": 96 },
+    "namespace": { "type": "string", "minLength": 3, "maxLength": 128 },
+    "appId": { "type": "string", "minLength": 2, "maxLength": 128 }
+  },
+  "additionalProperties": false
+}
