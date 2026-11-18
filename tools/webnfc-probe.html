@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ncNFC Web NFC probe</title>
+<style>
+  :root { --bg:#fbfaf7; --fg:#1d1d1b; --muted:#6b6a65; --line:#dedbd2; --ok:#2f7d4f; --warn:#a35b00; --bad:#b3261e; --card:#fff; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161614; --fg:#ecebe6; --muted:#a19f97; --line:#34332f; --ok:#6cc68f; --warn:#e3a14a; --bad:#f08a80; --card:#1f1f1c; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width:640px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:1.4rem; margin:0 0 4px; }
+  p { color:var(--muted); margin:0 0 16px; }
+  button { font:inherit; padding:10px 16px; border-radius:8px; border:1px solid var(--line); background:var(--fg); color:var(--bg); cursor:pointer; }
+  button.secondary { background:transparent; color:var(--fg); }
+  #status { margin:16px 0; font-weight:600; }
+  ol { list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+  li { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px; }
+  code { font:14px/1.4 ui-monospace, monospace; word-break:break-all; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  small { color:var(--muted); display:block; margin-top:4px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>ncNFC Web NFC probe</h1>
+  <p>Finds out which of <em>your own</em> cards Chrome on Android can see without an app. Tap each card several times, lifting it away in between. Nothing leaves this page: no network requests, no storage.</p>
+  <button id="start">Start scanning</button>
+  <button id="copy" class="secondary" hidden>Copy report</button>
+  <div id="status"></div>
+  <ol id="log"></ol>
+</main>
+<script type="module">
+  import { assessObservation, canonicalUid } from '../src/observation.js';
+
+  const status = document.getElementById('status');
+  const log = document.getElementById('log');
+  const seen = new Map();   // canonical serial -> count
+  const report = [];
+
+  // Web NFC reports a colon-separated serial but not the radio technology, so
+  // ncNFC has to infer it. 8 bytes with E0 at one end is ISO 15693; 4/7/10 bytes
+  // is most likely ISO 14443-A. Anything else stays "unknown".
+  function inferTechnology(hex) {
+    const n = hex.length / 2;
+    if (n === 8 && (hex.startsWith('E0') || hex.endsWith('E0'))) return 'iso15693';
+    if (n === 4 || n === 7 || n === 10) return 'iso14443a';
+    return null;
+  }
+
+  function add(html) { const li = document.createElement('li'); li.innerHTML = html; log.prepend(li); }
+
+  document.getElementById('start').addEventListener('click', async () => {
+    if (!('NDEFReader' in window)) {
+      status.innerHTML = '<span class="bad">Web NFC is not available here.</span> It needs Chrome on Android, over HTTPS, with NFC switched on.';
+      return;
+    }
+    try {
+      const reader = new NDEFReader();
+      await reader.scan();
+      status.innerHTML = '<span class="ok">Scanning.</span> Hold a card to the back of the phone.';
+      document.getElementById('copy').hidden = false;
+
+      reader.addEventListener('readingerror', () => {
+        report.push({ result: 'readingerror' });
+        add('<span class="warn">Tag detected but not exposed to Web NFC.</span><small>Chrome only reports tags that are NDEF or NDEF-formattable. A native app would still see this card.</small>');
+      });
+
+      reader.addEventListener('reading', ({ serialNumber, message }) => {
+        const raw = (serialNumber || '').replace(/:/g, '').toUpperCase();
+        if (!raw) {
+          report.push({ result: 'no-serial', records: message.records.length });
+          add('<span class="warn">Read, but Chrome gave no serial number.</span>');
+          return;
+        }
+        const technology = inferTechnology(raw);
+        const uid = technology ? canonicalUid(technology, raw) : raw;
+        const count = (seen.get(uid) || 0) + 1;
+        seen.set(uid, count);
+        const q = technology ? assessObservation({ technology, uid }) : null;
+        const verdict = !q ? '<span class="warn">Unknown technology</span>'
+          : q.registrable ? `<span class="ok">Usable</span> · ${q.uidClass}${q.manufacturer?.name ? ' · ' + q.manufacturer.name : ''}`
+          : `<span class="bad">Not usable</span> · ${q.uidClass}`;
+        report.push({ result: 'reading', technology: technology || 'unknown', uidClass: q?.uidClass, length: uid.length / 2, records: message.records.length, repeat: count });
+        add(`${verdict}<br><code>${uid}</code><small>${technology || 'technology not reported'} (inferred) · ${uid.length / 2} bytes · NDEF records: ${message.records.length} · seen ${count}×${count > 1 ? ' (stable across taps)' : ''}</small>${q ? `<small>${q.notes.join(' ')}</small>` : ''}`);
+      });
+    } catch (error) {
+      status.innerHTML = `<span class="bad">${error.name}:</span> ${error.message}`;
+    }
+  });
+
+  // The copied report leaves out serial numbers so it is safe to paste into an issue.
+  document.getElementById('copy').addEventListener('click', async () => {
+    const text = JSON.stringify({ userAgent: navigator.userAgent, results: report }, null, 2);
+    try { await navigator.clipboard.writeText(text); status.textContent = 'Report copied (serial numbers left out).'; }
+    catch { status.textContent = 'Clipboard blocked. Report:\n' + text; }
+  });
+</script>
+</body>
+</html>

@@ -70,6 +70,10 @@ Data defaults to `./data/registry.json` (gitignored); override with `NEWCARD_DAT
 | `bin/newcard.js` | Local registration/lookup/serve CLI |
 | `sdk/js/` | Zero-dependency JavaScript resolver client; does not scan NFC hardware |
 | `docs/` | Security, compatibility, roadmap, and integration notes |
+| `docs/LANDSCAPE.md` | Which cards, phones and browsers expose usable IDs; prior art; sources |
+| `docs/HOW-IT-WORKS.md` | End-to-end flows, scanning paths, quality classes, assurance tiers, 0.2 proposals |
+| `src/observation.js` | UID quality classifier and canonical byte order |
+| `tools/webnfc-probe.html` | Android Chrome page to test which of your cards Web NFC can see |
 | `examples/` | Synthetic sample objects |
 
 ## Central idea: CGNAT-inspired NFC addressing

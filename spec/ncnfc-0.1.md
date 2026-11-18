@@ -22,6 +22,15 @@ Terms **MUST**, **SHOULD**, **MAY** have RFC 2119 meanings for this draft.
 
 A scanner MUST identify the radio technology and transport the **byte ordering it actually received**. The initial registry recognizes technology labels `iso14443a`, `iso14443b`, `iso15693`, and `felica`. UIDs MUST be hexadecimal byte strings (even number of digits). Colon, hyphen, and ASCII spaces MAY be ignored for display convenience. Registry normalization uppercases the result. A UID MUST NOT be presumed stable or globally unique simply because it exists.
 
+**Canonical order.** For `iso15693`, an 8-byte UID with `E0` at exactly one end MUST be reordered so `E0` is first, because readers disagree on ISO 15693 byte order. Other technologies are kept as received.
+
+**Observation quality.** Before binding, a registry MUST classify the observation (reference: `src/observation.js`, following NXP AN10927) and MUST refuse:
+
+- ISO 14443-A 4-byte UIDs beginning `08` (random ID, regenerated at every power-up);
+- 4-byte values beginning `88` (cascade tag, i.e. an incomplete UID).
+
+It SHOULD record the class (`single_size`, `fnuid`, `double_size`, `vicinity`, `idm`, `pupi`, …) so clients can warn when an identifier is known to be shared. 7-byte ISO 14443-A UIDs whose first byte is in the range `81`–`FE` violate the manufacturer-code rule and SHOULD be flagged as anomalous (likely UID-writable or emulated).
+
 Initial v0.1 reference implementation accepts a 1–32 byte identifier. Real-world families can impose more specific constraints; reader implementations MUST NOT manufacture values they cannot observe.
 
 ## 4. Addressing and translation
@@ -117,4 +126,5 @@ The registry needs account authentication, a clear claim/transfer/revoke policy,
 - Apple Core NFC background-reading requirements: https://developer.apple.com/documentation/corenfc/adding-support-for-background-tag-reading
 - NXP AN10927 (UID types, nonunique and random UIDs): https://www.nxp.com/docs/en/application-note/AN10927.pdf
 - Open Graph Protocol: https://ogp.me/
+- W3C Web NFC (serialNumber, `readingerror` for non-NDEF tags): https://w3c-cg.github.io/web-nfc/
 - RFC 6598 (shared address space; analogy only): https://www.rfc-editor.org/rfc/rfc6598

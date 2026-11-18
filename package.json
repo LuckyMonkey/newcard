@@ -10,7 +10,8 @@
     "start": "node bin/newcard.js serve",
     "demo": "node bin/newcard.js demo",
     "register": "node bin/newcard.js register",
-    "lookup": "node bin/newcard.js lookup"
+    "lookup": "node bin/newcard.js lookup",
+    "inspect": "node bin/newcard.js inspect"
   },
   "license": "MIT"
 }

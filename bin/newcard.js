@@ -2,7 +2,8 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { registerCard, resolveCard } from '../src/core.js';
+import { normalizeObservation, registerCard, resolveCard } from '../src/core.js';
+import { assessObservation } from '../src/observation.js';
 import { createServer } from '../src/server.js';
 import { defaultDataFile, loadRegistry, saveRegistry } from '../src/registry.js';
 
@@ -31,6 +32,7 @@ function help() {
   node bin/newcard.js demo
   node bin/newcard.js serve [--port 8787] [--host 127.0.0.1]
   node bin/newcard.js register --namespace demo.mine --technology iso14443a --uid 04DEADBE --title 'My card' --url https://example.com [--app com.example.app=https://example.com/action]
+  node bin/newcard.js inspect --technology iso14443a --uid 04DEADBEEF0102
   node bin/newcard.js lookup --technology iso14443a --uid 04DEADBE [--namespace demo.mine] [--appId com.example.app]
 
 This is a local, unverified registry demo; use your own permitted test cards.`);
@@ -46,7 +48,7 @@ async function main() {
     const samples = JSON.parse(await readFile(sampleFile, 'utf8'));
     let inserted = 0;
     for (const entry of samples) {
-      if (registry.bindings.some(b => b.namespace === entry.namespace && b.technology === entry.technology && b.uid === entry.uid.replace(/[:\- ]/g, '').toUpperCase())) continue;
+      if (registry.bindings.some(b => b.namespace === entry.namespace && b.technology === entry.technology && b.uid === normalizeObservation(entry).uid)) continue;
       registerCard(registry, entry);
       inserted += 1;
     }
@@ -64,6 +66,11 @@ async function main() {
     const result = resolveCard(registry, flags);
     console.log(JSON.stringify(result, null, 2));
     if (result.status !== 'resolved') process.exitCode = 1;
+    return;
+  }
+  if (command === 'inspect') {
+    const observation = normalizeObservation(flags);
+    console.log(JSON.stringify({ canonicalUid: observation.uid, ...assessObservation(observation) }, null, 2));
     return;
   }
   if (command === 'serve') return serve(registry, flags);

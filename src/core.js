@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { assessObservation, canonicalUid } from './observation.js';
 
 export const PROTOCOL = 'ncNFC/0.1';
 
@@ -19,7 +20,7 @@ export function normalizeObservation(input) {
   if (!/^(?:[0-9A-F]{2}){1,32}$/.test(uid)) {
     throw new RangeError('uid must contain 1–32 bytes of hexadecimal digits');
   }
-  return { technology, uid };
+  return { technology, uid: canonicalUid(technology, uid) };
 }
 
 export function normalizeNamespace(namespace) {
@@ -54,6 +55,8 @@ export function registerCard(registry, input) {
     throw new TypeError('invalid registry');
   }
   const { technology, uid } = normalizeObservation(input);
+  const quality = assessObservation({ technology, uid });
+  if (!quality.registrable) throw new RangeError(`observation cannot be registered: ${quality.notes[0]}`);
   const namespace = normalizeNamespace(input.namespace);
   const title = String(input.title || '').trim();
   if (!title || title.length > 120) throw new RangeError('title must be 1–120 characters');
@@ -72,7 +75,7 @@ export function registerCard(registry, input) {
   if (exists) throw new Error('binding already registered in namespace');
   const id = `nc_${randomUUID().replaceAll('-', '')}`;
   const object = { id, kind, title, description, url, image, apps };
-  const binding = { objectId: id, namespace, technology, uid, assurance: 'unverified', createdAt: new Date().toISOString() };
+  const binding = { objectId: id, namespace, technology, uid, uidClass: quality.uidClass, assurance: 'unverified', createdAt: new Date().toISOString() };
   registry.objects.push(object);
   registry.bindings.push(binding);
   return { object, binding };
