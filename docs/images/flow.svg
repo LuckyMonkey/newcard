@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>How a tap becomes a web object</title>
+  <rect width="960" height="400" rx="16" fill="#FBFAF7"/>
+  <text x="20" y="36" font-size="20" font-weight="700" fill="#1D1D1B">How a tap becomes a web object</text>
+
+  <g font-size="13" fill="#6B6A65">
+    <rect x="20" y="60" width="200" height="104" rx="10" fill="#FFFFFF" stroke="#DEDBD2"/>
+    <text x="36" y="88" font-size="15" font-weight="700" fill="#1D1D1B">Old card</text>
+    <text x="36" y="110">chip is never written</text>
+    <text x="36" y="128">transit card, hotel key,</text>
+    <text x="36" y="146">event pass, badge</text>
+
+    <rect x="260" y="60" width="200" height="104" rx="10" fill="#FFFFFF" stroke="#DEDBD2"/>
+    <text x="276" y="88" font-size="15" font-weight="700" fill="#1D1D1B">Scanner</text>
+    <text x="276" y="110">Android app · Chrome</text>
+    <text x="276" y="128">iPhone app · USB reader</text>
+    <text x="276" y="146" fill="#3E5C76" font-family="ui-monospace, Menlo, monospace" font-size="12">{technology, uid}</text>
+
+    <rect x="500" y="60" width="200" height="104" rx="10" fill="#FFFFFF" stroke="#DEDBD2"/>
+    <text x="516" y="88" font-size="15" font-weight="700" fill="#1D1D1B">Check the UID</text>
+    <text x="516" y="110">refuse random IDs (08…)</text>
+    <text x="516" y="128">fix ISO 15693 byte order</text>
+    <text x="516" y="146">classify 4-byte / 7-byte…</text>
+
+    <rect x="740" y="60" width="200" height="104" rx="10" fill="#EEF2F6" stroke="#3E5C76"/>
+    <text x="756" y="88" font-size="15" font-weight="700" fill="#1D1D1B">Resolver</text>
+    <text x="756" y="110" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#3E5C76">(namespace, tech, uid)</text>
+    <text x="756" y="128">→ opaque nc_… object</text>
+    <text x="756" y="146">POST /v1/resolve</text>
+  </g>
+  <g stroke="#6B6A65" stroke-width="2" fill="none">
+    <path d="M222 112 H250"/><path d="M462 112 H490"/><path d="M702 112 H730"/>
+  </g>
+  <g fill="#6B6A65">
+    <polygon points="258,112 248,106 248,118"/><polygon points="498,112 488,106 488,118"/><polygon points="738,112 728,106 728,118"/>
+  </g>
+  <g stroke="#6B6A65" stroke-width="2" fill="none">
+    <path d="M840 164 V198"/><path d="M165 198 H840"/>
+  </g>
+  <g stroke="#6B6A65" stroke-width="2" fill="none">
+    <path d="M165 198 V220"/><path d="M480 198 V220"/><path d="M795 198 V220"/>
+  </g>
+  <g fill="#6B6A65">
+    <polygon points="165,229 159,219 171,219"/><polygon points="480,229 474,219 486,219"/><polygon points="795,229 789,219 801,219"/>
+  </g>
+
+  <g font-size="13" fill="#4A4945">
+    <rect x="20" y="230" width="290" height="112" rx="10" fill="#E6F2EA" stroke="#3F8F5A"/>
+    <text x="36" y="256" font-size="15" font-weight="700" fill="#2C6B43">resolved · 200</text>
+    <text x="36" y="278">object: title, kind, default URL</text>
+    <text x="36" y="296">action chosen by the caller's appId</text>
+    <text x="36" y="314">user confirms before leaving the app</text>
+
+    <rect x="335" y="230" width="290" height="112" rx="10" fill="#FBEBDD" stroke="#D9822B"/>
+    <text x="351" y="256" font-size="15" font-weight="700" fill="#9A5410">ambiguous · 409</text>
+    <text x="351" y="278">same UID bound in several namespaces</text>
+    <text x="351" y="296">client asks which context it means</text>
+    <text x="351" y="314">never picks one silently</text>
+
+    <rect x="650" y="230" width="290" height="112" rx="10" fill="#F1F0EC" stroke="#B5B2A8"/>
+    <text x="666" y="256" font-size="15" font-weight="700" fill="#4A4945">not_found · 404</text>
+    <text x="666" y="278">no binding for this card yet</text>
+    <text x="666" y="296">the owner can register it</text>
+    <text x="666" y="314">the UID is never echoed back</text>
+  </g>
+  <text x="20" y="378" font-size="13" fill="#6B6A65">The UID is a routing hint inside a namespace. It is never a password, a payment, or proof of identity.</text>
+</svg>

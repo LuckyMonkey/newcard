@@ -1,6 +1,8 @@
 # How NewCard works, end to end
 
-This expands `ARCHITECTURE.md` with what the platforms actually allow (see `LANDSCAPE.md`). Anything marked *proposed* is not implemented and not yet in the spec.
+This expands `ARCHITECTURE.md` with what the platforms actually allow (see `LANDSCAPE.md`; fact IDs like P8 refer to `FACTS.md`). Anything marked *proposed* is not implemented and not yet in the spec.
+
+![How a tap becomes a web object](images/flow.svg)
 
 ## 1. The life of a card
 
@@ -18,12 +20,16 @@ This expands `ARCHITECTURE.md` with what the platforms actually allow (see `LAND
 
 The object ID (`nc_…`) is the durable thing. If the card is lost, re-bind a new card to the same object and every link, app action and printed QR that points at `/o/nc_…` keeps working.
 
+![Setting a card up once](images/scene-register.jpg)
+
 ## 2. Scanning paths, best to worst
+
+![Who can read the card's UID](images/scan-paths.svg)
 
 ### A. Android native app (primary target)
 
 - **Foreground:** `NfcAdapter.enableReaderMode()` with flags for NfcA/B/F/V. Gives `Tag.getId()` and `getTechList()` for every family, including MIFARE Classic UIDs on non-NXP phones.
-- **Tap-to-open with the app closed:** declare an `ACTION_TECH_DISCOVERED` intent filter with tech lists (`NfcA`, `NfcV`, `NfcF`, `IsoDep`). Tapping a bare transit card then launches NewCard directly. **This is the only platform where "tap an old card and something happens" works with no button press.** Caveat: an app that claims `NDEF_DISCOVERED` for the tag's content takes priority.
+- **Tap-to-open with the app closed:** declare an `ACTION_TECH_DISCOVERED` intent filter with tech lists (`NfcA`, `NfcV`, `NfcF`, `IsoDep`). Tapping a bare transit card then launches NewCard directly. **This is the only platform where "tap an old card and something happens" works with no button press.** Caveats: an app that claims `NDEF_DISCOVERED` for the tag's content takes priority. Android 16 tells the user the first time and lets them switch off "Launch via NFC" for the app, so check `NfcAdapter.isTagIntentAllowed()` and explain why it matters (P5). Apps targeting Android 17 must protect the activity with `DISPATCH_NFC_MESSAGE`, and a never-opened or force-stopped app gets no tag intents, so the user has to open NewCard once after installing (P6).
 - **Extra fingerprint, free on Android:** `NfcA.getAtqa()` and `getSak()`. They separate card families (Classic 1K vs Ultralight vs DESFire) that share a UID. See §4.
 
 ### B. Android Chrome, no install (Web NFC)
@@ -31,7 +37,7 @@ The object ID (`nc_…`) is the durable thing. If the card is lost, re-bind a ne
 - `new NDEFReader().scan()` after a user gesture, HTTPS only, page in the foreground.
 - Tags that are NDEF or NDEF-formattable produce `reading` with `serialNumber` (the UID). Everything else produces `readingerror` with nothing.
 - Web NFC **does not report the technology**. ncNFC has to infer it from length and prefix (`tools/webnfc-probe.html` does this). That's a gap in the 0.1 spec; see §5.
-- Hypothesis to test: DESFire transit cards and (on NXP-controller phones) MIFARE Classic cards report `NdefFormatable`, so they *should* reach `reading`. If that holds, a NewCard **web page** covers a large share of transit cards on Android with no install.
+- Confirmed in Chromium's source (P8, P9): Chrome builds a handler only for tags Android lists as `Ndef` or `NdefFormatable`. For a formattable tag it fires `reading` with an empty message and `serialNumber = tag.getId()`. So the open question is only *which cards Android lists as NdefFormatable* (P12, P13). If DESFire transit cards do, a NewCard **web page** covers a large share of transit cards on Android with no install.
 
 ### C. iPhone app (Core NFC)
 
@@ -46,6 +52,8 @@ The object ID (`nc_…`) is the durable thing. If the card is lost, re-bind a ne
 - These usually report UIDs in transmission order. Canonicalisation (§3) keeps them consistent with phones.
 
 ## 3. Canonical observation (implemented)
+
+![Reading a card's UID](images/uid-anatomy.svg)
 
 The same card has to produce the same key no matter which reader saw it. Home Assistant shows what happens otherwise: one tag, two IDs, depending on whether a phone or an ESPHome reader scanned it.
 
@@ -69,6 +77,8 @@ The same card has to produce the same key no matter which reader saw it. Home As
 
 Proposed assurance ladder for `binding.assurance` (today it is always `unverified`):
 
+![Assurance tiers](images/assurance.svg)
+
 | Tier | How it's earned | What it proves |
 | --- | --- | --- |
 | `unverified` | Typed or imported UID | Nothing |
@@ -86,6 +96,8 @@ Proposed assurance ladder for `binding.assurance` (today it is always `unverifie
 
 ## 6. Collisions, with numbers
 
+![Namespaces and collisions](images/namespaces.svg)
+
 4-byte UIDs give about 4.29 billion values, and NXP re-issues them. Birthday math: inside one namespace, a 1% chance that two cards share a UID arrives at about 9,300 cards. A 50% chance arrives at about 77,000. A busy public namespace of old Classic cards *will* collide. That's why:
 
 - Duplicate binding inside a namespace is refused (implemented).
@@ -95,6 +107,12 @@ Proposed assurance ladder for `binding.assurance` (today it is always `unverifie
 7-byte UIDs give about 2.8×10^14 values per manufacturer (AN10927). Collisions there mean cloning, not chance.
 
 ## 7. Example uses that fit the honest constraints
+
+| | |
+| --- | --- |
+| ![Café table card](images/scene-restaurant.jpg) | ![Storage bins](images/scene-inventory.jpg) |
+| ![Story cards on a music box](images/scene-jukebox.jpg) | ![Tapping an old card](images/scene-hero.jpg) |
+
 
 | Use | Why it fits |
 | --- | --- |
@@ -108,7 +126,4 @@ Things that never fit: door access, payments, fares, identity, age checks, anyth
 
 ## 8. Next concrete steps
 
-1. Host `tools/webnfc-probe.html` over HTTPS (GitHub Pages works) and collect probe reports from real Android phones and cards. That settles the Web NFC hypothesis in §2B.
-2. Minimal Android app: reader mode, `TECH_DISCOVERED` launch, ATQA/SAK capture, originality-signature check on NTAG/Ultralight.
-3. Spec 0.2 PR for §5 items 1–3, with tests.
-4. iOS spike: one Core NFC session app, a table of which families report an `identifier`.
+See [`ROADMAP.md`](ROADMAP.md) for the full phases. The next one is **Phase 1: field evidence**: test real cards on Android, iPhone and Chrome (served locally over HTTPS) and record the answers to the open questions in `FACTS.md`, before writing app code.

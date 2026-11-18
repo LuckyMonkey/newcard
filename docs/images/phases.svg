@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" width="960" height="330" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Implementation phases</title>
+  <rect width="960" height="330" rx="16" fill="#FBFAF7"/>
+  <text x="20" y="36" font-size="20" font-weight="700" fill="#1D1D1B">Implementation phases</text>
+  <path d="M40 92 H920" stroke="#DEDBD2" stroke-width="4"/>
+  <g font-size="12" fill="#4A4945">
+    <circle cx="96" cy="92" r="14" fill="#3F8F5A"/><text x="96" y="97" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">0</text>
+    <rect x="20" y="120" width="152" height="164" rx="10" fill="#E6F2EA" stroke="#3F8F5A"/>
+    <text x="32" y="144" font-size="14" font-weight="700" fill="#1D1D1B">Reference</text>
+    <text x="32" y="162" font-size="14" font-weight="700" fill="#1D1D1B">resolver</text>
+    <text x="32" y="186">Spec 0.1, resolver,</text>
+    <text x="32" y="202">CLI, JS SDK, UID</text>
+    <text x="32" y="218">checker, research</text>
+    <text x="32" y="268" font-weight="700" fill="#2C6B43">Done</text>
+
+    <circle cx="252" cy="92" r="14" fill="#D9822B"/><text x="252" y="97" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">1</text>
+    <rect x="176" y="120" width="152" height="164" rx="10" fill="#FBEBDD" stroke="#D9822B"/>
+    <text x="188" y="144" font-size="14" font-weight="700" fill="#1D1D1B">Field evidence</text>
+    <text x="188" y="168">Test real cards on</text>
+    <text x="188" y="184">Android, iPhone,</text>
+    <text x="188" y="200">Chrome. Fill the</text>
+    <text x="188" y="216">compatibility data</text>
+    <text x="188" y="268" font-weight="700" fill="#9A5410">Next</text>
+
+    <circle cx="408" cy="92" r="14" fill="#B5B2A8"/><text x="408" y="97" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">2</text>
+    <rect x="332" y="120" width="152" height="164" rx="10" fill="#fff" stroke="#DEDBD2"/>
+    <text x="344" y="144" font-size="14" font-weight="700" fill="#1D1D1B">Android</text>
+    <text x="344" y="162" font-size="14" font-weight="700" fill="#1D1D1B">scanner</text>
+    <text x="344" y="186">Reader mode, tap to</text>
+    <text x="344" y="202">launch, on-device</text>
+    <text x="344" y="218">registry, signature</text>
+    <text x="344" y="234">check</text>
+
+    <circle cx="564" cy="92" r="14" fill="#B5B2A8"/><text x="564" y="97" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">3</text>
+    <rect x="488" y="120" width="152" height="164" rx="10" fill="#fff" stroke="#DEDBD2"/>
+    <text x="500" y="144" font-size="14" font-weight="700" fill="#1D1D1B">ncNFC 0.2 +</text>
+    <text x="500" y="162" font-size="14" font-weight="700" fill="#1D1D1B">hosted registry</text>
+    <text x="500" y="186">Accounts, owned</text>
+    <text x="500" y="202">namespaces, HMAC</text>
+    <text x="500" y="218">keys, rate limits,</text>
+    <text x="500" y="234">delete / transfer</text>
+
+    <circle cx="720" cy="92" r="14" fill="#B5B2A8"/><text x="720" y="97" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">4</text>
+    <rect x="644" y="120" width="152" height="164" rx="10" fill="#fff" stroke="#DEDBD2"/>
+    <text x="656" y="144" font-size="14" font-weight="700" fill="#1D1D1B">iPhone, web,</text>
+    <text x="656" y="162" font-size="14" font-weight="700" fill="#1D1D1B">SDKs</text>
+    <text x="656" y="186">Core NFC app, Web</text>
+    <text x="656" y="202">NFC page, Kotlin /</text>
+    <text x="656" y="218">Swift SDKs, app</text>
+    <text x="656" y="234">handoff</text>
+
+    <circle cx="864" cy="92" r="14" fill="#B5B2A8"/><text x="864" y="97" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">5</text>
+    <rect x="800" y="120" width="140" height="164" rx="10" fill="#fff" stroke="#DEDBD2"/>
+    <text x="812" y="144" font-size="14" font-weight="700" fill="#1D1D1B">Ecosystem</text>
+    <text x="812" y="168">Integrations</text>
+    <text x="812" y="184">(menus, jukebox,</text>
+    <text x="812" y="200">Home Assistant),</text>
+    <text x="812" y="216">federation, SUN</text>
+    <text x="812" y="232">tags tier</text>
+  </g>
+  <text x="20" y="312" font-size="12" fill="#6B6A65">Each phase has a “done when” check in docs/ROADMAP.md. A phase starts only once the previous one's evidence is in.</text>
+</svg>

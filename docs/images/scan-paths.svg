@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Who can read the card</title>
+  <rect width="960" height="400" rx="16" fill="#FBFAF7"/>
+  <text x="20" y="36" font-size="20" font-weight="700" fill="#1D1D1B">Who can read the card's UID?</text>
+  <g font-size="13" fill="#4A4945">
+    <rect x="20" y="58" width="215" height="306" rx="12" fill="#fff" stroke="#DEDBD2"/>
+    <text x="36" y="86" font-size="16" font-weight="700" fill="#1D1D1B">Android app</text>
+    <rect x="36" y="98" width="183" height="26" rx="13" fill="#E6F2EA"/><text x="50" y="116" fill="#2C6B43" font-weight="700">Every NFC card type</text>
+    <text x="36" y="150">Reader mode in the foreground</text>
+    <text x="36" y="172">Can open itself when a bare</text>
+    <text x="36" y="190">card is tapped, app closed</text>
+    <text x="36" y="216">Android 16: user can switch</text>
+    <text x="36" y="234">off “Launch via NFC”</text>
+    <text x="36" y="260">Android 17: never-opened or</text>
+    <text x="36" y="278">force-stopped apps are not</text>
+    <text x="36" y="296">launched by a tap</text>
+    <text x="36" y="340" fill="#3E5C76" font-weight="600">Main target</text>
+
+    <rect x="255" y="58" width="215" height="306" rx="12" fill="#fff" stroke="#DEDBD2"/>
+    <text x="271" y="86" font-size="16" font-weight="700" fill="#1D1D1B">Chrome on Android</text>
+    <rect x="271" y="98" width="183" height="26" rx="13" fill="#FBEBDD"/><text x="285" y="116" fill="#9A5410" font-weight="700">Formattable tags only</text>
+    <text x="271" y="150">No install: an HTTPS page</text>
+    <text x="271" y="172">serialNumber = tag.getId()</text>
+    <text x="271" y="190">for Ndef / NdefFormatable</text>
+    <text x="271" y="216">Every other tag fires</text>
+    <text x="271" y="234">readingerror, no ID</text>
+    <text x="271" y="260">No technology label</text>
+    <text x="271" y="286">Page must be open; tap</text>
+    <text x="271" y="304">after pressing Scan</text>
+    <text x="271" y="340" fill="#3E5C76" font-weight="600">Zero-install fallback</text>
+
+    <rect x="490" y="58" width="215" height="306" rx="12" fill="#fff" stroke="#DEDBD2"/>
+    <text x="506" y="86" font-size="16" font-weight="700" fill="#1D1D1B">iPhone app</text>
+    <rect x="506" y="98" width="183" height="26" rx="13" fill="#FBEBDD"/><text x="520" y="116" fill="#9A5410" font-weight="700">Most, not MIFARE Classic</text>
+    <text x="506" y="150">Only inside the app, after</text>
+    <text x="506" y="168">the system scan sheet opens</text>
+    <text x="506" y="194">FeliCa system codes and</text>
+    <text x="506" y="212">ISO 7816 AIDs must be listed</text>
+    <text x="506" y="238">Classic: reported unreliable</text>
+    <text x="506" y="256">or not detected</text>
+    <text x="506" y="282">Background tap works only</text>
+    <text x="506" y="300">for NDEF URL tags</text>
+    <text x="506" y="340" fill="#3E5C76" font-weight="600">Open app → Scan</text>
+
+    <rect x="725" y="58" width="215" height="306" rx="12" fill="#fff" stroke="#DEDBD2"/>
+    <text x="741" y="86" font-size="16" font-weight="700" fill="#1D1D1B">Fixed reader</text>
+    <rect x="741" y="98" width="183" height="26" rx="13" fill="#E6F2EA"/><text x="755" y="116" fill="#2C6B43" font-weight="700">Every NFC card type</text>
+    <text x="741" y="150">USB PC/SC reader, or</text>
+    <text x="741" y="168">ESP32 + PN532 / PN7150</text>
+    <text x="741" y="194">Registration desks, kiosks</text>
+    <text x="741" y="220">Jukeboxes, tool cribs,</text>
+    <text x="741" y="238">inventory stations</text>
+    <text x="741" y="264">Same HTTP resolver API</text>
+    <text x="741" y="340" fill="#3E5C76" font-weight="600">Always-on readers</text>
+  </g>
+  <text x="20" y="388" font-size="12" fill="#6B6A65">Sources: Android NFC docs, Chromium NfcTagHandler.java, W3C Web NFC, Apple Core NFC docs and forums. See docs/FACTS.md.</text>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Assurance tiers</title>
+  <rect width="960" height="400" rx="16" fill="#FBFAF7"/>
+  <text x="20" y="36" font-size="20" font-weight="700" fill="#1D1D1B">How much can a binding be trusted? (proposed tiers)</text>
+  <g font-size="13" fill="#4A4945">
+    <rect x="20" y="276" width="220" height="80" rx="10" fill="#F1F0EC" stroke="#B5B2A8"/>
+    <text x="36" y="302" font-size="16" font-weight="700" fill="#1D1D1B">unverified</text>
+    <text x="36" y="322">UID typed or imported</text>
+    <text x="36" y="340" fill="#6B6A65">Proves nothing</text>
+
+    <rect x="255" y="212" width="220" height="144" rx="10" fill="#EEF2F6" stroke="#3E5C76"/>
+    <text x="271" y="238" font-size="16" font-weight="700" fill="#1D1D1B">observed</text>
+    <text x="271" y="258">Signed-in owner scanned</text>
+    <text x="271" y="276">it live, twice, lifting the</text>
+    <text x="271" y="294">card away in between</text>
+    <text x="271" y="320" fill="#6B6A65">Someone held a card</text>
+    <text x="271" y="338" fill="#6B6A65">showing this UID</text>
+
+    <rect x="490" y="148" width="220" height="208" rx="10" fill="#E6F2EA" stroke="#3F8F5A"/>
+    <text x="506" y="174" font-size="16" font-weight="700" fill="#1D1D1B">signed</text>
+    <text x="506" y="194">App read the NXP originality</text>
+    <text x="506" y="212">signature and it matched</text>
+    <text x="506" y="230">NXP's public key for this UID</text>
+    <text x="506" y="256" fill="#6B6A65">Real NXP chip, or a replay</text>
+    <text x="506" y="274" fill="#6B6A65">of its signature. Stops</text>
+    <text x="506" y="292" fill="#6B6A65">crude UID spoofing</text>
+    <text x="506" y="326" font-size="12" fill="#2C6B43">NTAG21x, Ultralight EV1,</text>
+    <text x="506" y="342" font-size="12" fill="#2C6B43">some DESFire / Plus</text>
+
+    <rect x="725" y="84" width="215" height="272" rx="10" fill="#FBEBDD" stroke="#D9822B"/>
+    <text x="741" y="110" font-size="16" font-weight="700" fill="#1D1D1B">cryptographic</text>
+    <text x="741" y="130">Tag makes a fresh AES</text>
+    <text x="741" y="148">code on every tap (SUN),</text>
+    <text x="741" y="166">checked by the server</text>
+    <text x="741" y="192" fill="#6B6A65">Real possession of that</text>
+    <text x="741" y="210" fill="#6B6A65">physical tag</text>
+    <text x="741" y="244" font-size="12" fill="#9A5410" font-weight="700">Needs new tags</text>
+    <text x="741" y="262" font-size="12" fill="#9A5410">(NTAG 424 DNA). Outside the</text>
+    <text x="741" y="280" font-size="12" fill="#9A5410">“old card” core; the protocol</text>
+    <text x="741" y="298" font-size="12" fill="#9A5410">just leaves room for it</text>
+  </g>
+  <text x="20" y="262" font-size="13" font-weight="700" fill="#3E5C76">← every binding today</text>
+  <text x="20" y="384" font-size="12" fill="#6B6A65">None of these tiers makes a UID safe for doors, payments, fares or identity. They only rank how much a binding can be trusted.</text>
+</svg>

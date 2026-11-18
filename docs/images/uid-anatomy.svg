@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" width="960" height="420" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <title>Reading a card UID</title>
+  <rect width="960" height="420" rx="16" fill="#FBFAF7"/>
+  <text x="20" y="36" font-size="20" font-weight="700" fill="#1D1D1B">Reading a card's UID: the first byte tells you a lot</text>
+  <g font-size="14" fill="#1D1D1B" font-weight="600">
+    <text x="20" y="89">4 bytes, starts 08</text>
+    <text x="20" y="157">4 bytes, other</text>
+    <text x="20" y="225">7 bytes (ISO 14443-A)</text>
+    <text x="20" y="293">8 bytes (ISO 15693)</text>
+    <text x="20" y="361">8 bytes (FeliCa IDm)</text>
+  </g>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="15" text-anchor="middle">
+    <!-- row 1 -->
+    <rect x="200" y="64" width="44" height="40" rx="6" fill="#F8E1DF" stroke="#B3261E"/><text x="222" y="90" fill="#B3261E" font-weight="700">08</text>
+    <rect x="250" y="64" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="272" y="90" fill="#6B6A65">3A</text>
+    <rect x="300" y="64" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="322" y="90" fill="#6B6A65">91</text>
+    <rect x="350" y="64" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="372" y="90" fill="#6B6A65">C2</text>
+    <!-- row 2 -->
+    <rect x="200" y="132" width="44" height="40" rx="6" fill="#FBEBDD" stroke="#D9822B"/><text x="222" y="158" fill="#9A5410" font-weight="700">A2</text>
+    <rect x="250" y="132" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="272" y="158" fill="#6B6A65">7F</text>
+    <rect x="300" y="132" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="322" y="158" fill="#6B6A65">91</text>
+    <rect x="350" y="132" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="372" y="158" fill="#6B6A65">04</text>
+    <!-- row 3 -->
+    <rect x="200" y="200" width="44" height="40" rx="6" fill="#E6F2EA" stroke="#3F8F5A"/><text x="222" y="226" fill="#2C6B43" font-weight="700">04</text>
+    <rect x="250" y="200" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="272" y="226" fill="#6B6A65">A2</text>
+    <rect x="300" y="200" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="322" y="226" fill="#6B6A65">7F</text>
+    <rect x="350" y="200" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="372" y="226" fill="#6B6A65">91</text>
+    <rect x="400" y="200" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="422" y="226" fill="#6B6A65">22</text>
+    <rect x="450" y="200" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="472" y="226" fill="#6B6A65">33</text>
+    <rect x="500" y="200" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="522" y="226" fill="#6B6A65">80</text>
+    <!-- row 4 -->
+    <rect x="200" y="268" width="44" height="40" rx="6" fill="#E6F2EA" stroke="#3F8F5A"/><text x="222" y="294" fill="#2C6B43" font-weight="700">E0</text>
+    <rect x="250" y="268" width="44" height="40" rx="6" fill="#E6F2EA" stroke="#3F8F5A"/><text x="272" y="294" fill="#2C6B43" font-weight="700">04</text>
+    <rect x="300" y="268" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="322" y="294" fill="#6B6A65">01</text>
+    <rect x="350" y="268" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="372" y="294" fill="#6B6A65">50</text>
+    <rect x="400" y="268" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="422" y="294" fill="#6B6A65">23</text>
+    <rect x="450" y="268" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="472" y="294" fill="#6B6A65">AB</text>
+    <rect x="500" y="268" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="522" y="294" fill="#6B6A65">CD</text>
+    <rect x="550" y="268" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="572" y="294" fill="#6B6A65">12</text>
+    <!-- row 5 -->
+    <rect x="200" y="336" width="44" height="40" rx="6" fill="#EEF2F6" stroke="#3E5C76"/><text x="222" y="362" fill="#3E5C76" font-weight="700">01</text>
+    <rect x="250" y="336" width="44" height="40" rx="6" fill="#EEF2F6" stroke="#3E5C76"/><text x="272" y="362" fill="#3E5C76" font-weight="700">2E</text>
+    <rect x="300" y="336" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="322" y="362" fill="#6B6A65">4C</text>
+    <rect x="350" y="336" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="372" y="362" fill="#6B6A65">1B</text>
+    <rect x="400" y="336" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="422" y="362" fill="#6B6A65">90</text>
+    <rect x="450" y="336" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="472" y="362" fill="#6B6A65">0D</text>
+    <rect x="500" y="336" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="522" y="362" fill="#6B6A65">33</text>
+    <rect x="550" y="336" width="44" height="40" rx="6" fill="#fff" stroke="#DEDBD2"/><text x="572" y="362" fill="#6B6A65">5E</text>
+  </g>
+  <g font-size="13">
+    <text x="420" y="80" fill="#B3261E" font-weight="700">Random ID: new value at every tap</text>
+    <text x="420" y="98" fill="#6B6A65">Cannot be recognised again → refused</text>
+    <text x="420" y="148" fill="#9A5410" font-weight="700">Stable, but shared with other cards</text>
+    <text x="420" y="166" fill="#6B6A65">NXP re-issues 4-byte IDs → needs a namespace</text>
+    <text x="570" y="216" fill="#2C6B43" font-weight="700">First byte = manufacturer (04 = NXP)</text>
+    <text x="570" y="234" fill="#6B6A65">Unique per manufacturer; 81–FE = suspect clone</text>
+    <text x="620" y="284" fill="#2C6B43" font-weight="700">E0 + manufacturer code</text>
+    <text x="620" y="302" fill="#6B6A65">Readers disagree on order → stored E0-first</text>
+    <text x="620" y="352" fill="#3E5C76" font-weight="700">Starts with a manufacturer code</text>
+    <text x="620" y="370" fill="#6B6A65">Fixed on plastic cards; phone wallets differ</text>
+  </g>
+  <text x="20" y="404" font-size="12" fill="#6B6A65">Example bytes are made up. Rules: NXP AN10927 (ISO 14443-A), ISO/IEC 15693-3. Encoded in src/observation.js.</text>
+</svg>

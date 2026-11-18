@@ -2,11 +2,24 @@
 
 **Old card. New identity.**
 
+![An old card tapped against a phone opens a menu page](docs/images/scene-hero.jpg)
+
 **NewCard** is an independent, open-source project for giving compatible, existing NFC cards useful new purposes **without writing to the card**. **ncNFC** is the draft, application-agnostic recognition and resolution protocol behind it.
 
 A card's readable radio identifier is an *observation*, not a URL, login credential, or guaranteed globally unique identity. ncNFC translates that observation, plus an explicit namespace when necessary, into a stable web object. One object may expose different actions to different integrated applications.
 
 > **Status: proof of concept / draft ncNFC 0.1.** This repository contains a working Node.js resolver, local registration CLI, JavaScript client, schemas, and tests. It does **not** yet contain an Android/iOS scanning app, secure account ownership, or a public hosted registry.
+
+## How it works
+
+![How a tap becomes a web object](docs/images/flow.svg)
+
+| Read next | |
+| --- | --- |
+| [How it works](docs/HOW-IT-WORKS.md) | End-to-end flow, scanning paths per platform, UID quality, trust tiers, ncNFC 0.2 proposals |
+| [Landscape](docs/LANDSCAPE.md) | Which cards and phones expose usable IDs, prior art, legal and privacy |
+| [Fact ledger](docs/FACTS.md) | Every technical claim with its status and source |
+| [Roadmap](docs/ROADMAP.md) | Implementation phases with "done when" checks |
 
 ## Why?
 
@@ -70,6 +83,8 @@ Data defaults to `./data/registry.json` (gitignored); override with `NEWCARD_DAT
 | `bin/newcard.js` | Local registration/lookup/serve CLI |
 | `sdk/js/` | Zero-dependency JavaScript resolver client; does not scan NFC hardware |
 | `docs/` | Security, compatibility, roadmap, and integration notes |
+| `docs/FACTS.md` | Fact ledger: each claim, its status (doc / source / field / untested), and source |
+| `docs/images/` | Diagrams (SVG) and illustrations |
 | `docs/LANDSCAPE.md` | Which cards, phones and browsers expose usable IDs; prior art; sources |
 | `docs/HOW-IT-WORKS.md` | End-to-end flows, scanning paths, quality classes, assurance tiers, 0.2 proposals |
 | `src/observation.js` | UID quality classifier and canonical byte order |

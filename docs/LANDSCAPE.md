@@ -1,6 +1,8 @@
 # Landscape: cards, phones, and prior art
 
-Research snapshot, November 2026. Each claim is marked **[doc]** (vendor or standards documentation), **[field]** (developer reports, forums, community reverse-engineering) or **[test]** (we still need to confirm it on real hardware). Sources are listed at the end.
+Research snapshot, November 2026. Each claim is marked **[doc]** (vendor or standards documentation), **[source]** (read in the implementation's code), **[field]** (developer reports, forums, community reverse-engineering) or **[test]** (we still need to confirm it on real hardware). Sources are listed at the end, and every claim is tracked with an ID in [`FACTS.md`](FACTS.md).
+
+![Who can read the card's UID](images/scan-paths.svg)
 
 ## 1. What a card gives away without keys
 
@@ -15,14 +17,17 @@ Every contactless card has to say *something* during anti-collision, before any 
 
 NXP's own guidance: 4-byte UIDs "ended" because the space (~3.7 billion) ran out, and the same values are being re-issued. New systems should use 7-byte UIDs **[doc AN10927]**. So a 4-byte UID can only be a routing hint inside a namespace, never a global key.
 
+![Reading a card's UID](images/uid-anatomy.svg)
+
 `src/observation.js` encodes these rules, and `npm run inspect` runs them on a single observation.
 
 ## 2. Real-world card types and how they behave
 
 | Card type | Typical chip | Expected identifier | Notes |
 | --- | --- | --- | --- |
-| Older transit cards (many US/AU/NZ systems; Cubic "Nextfare MFC") | MIFARE Classic | 4-byte or 7-byte UID | UID readable on every phone. Sector contents need keys and an NXP controller. ncNFC never touches sectors **[field]** |
-| Newer transit cards (Oyster, Compass, many 2015+ systems) | MIFARE DESFire EV1/EV2/EV3 | 7-byte UID | DESFire can be personalised with **Random ID**. If the issuer enabled it, the card is unusable for ncNFC **[doc NXP]** |
+| Older transit cards (many US/AU/NZ systems; Cubic "Nextfare MFC") | MIFARE Classic | 4-byte or 7-byte UID | UID readable on Android phones. Sector contents need keys and an NXP controller. ncNFC never touches sectors **[field]** |
+| Boston CharlieCard (pre-2026) | MIFARE Classic 1K **[field]** | 4-byte or 7-byte UID | Android yes; iPhone likely no (Classic). The new CharlieCard piloted in 2025 uses an unknown chip **[test]** |
+| Newer transit cards (Oyster, Compass, many 2015+ systems) | MIFARE DESFire EV1/EV2/EV3 | 7-byte UID | DESFire can be personalised with **Random ID**. If the issuer enabled it, the card is unusable for ncNFC **[doc NXP]**. Possibly visible to Web NFC if Android lists it as `NdefFormatable` **[test]** |
 | Japanese/HK IC cards | FeliCa | 8-byte IDm | iOS needs each system code declared up front **[doc Apple]** |
 | Single-ride / paper tickets (Ventra/Compass "MFU") | MIFARE Ultralight | 7-byte UID | Cheap and plentiful, and often thrown away after one use. Good for reuse **[field]** |
 | Hotel key cards | MIFARE Classic or Ultralight (varies) | 4 or 7 byte | Common reuse target. Check with repeat reads **[test]** |
@@ -39,8 +44,8 @@ The phrase "stable UID" in a datasheet is not enough. The issuer configures each
 | Surface | Can it get the identifier? | Constraints |
 | --- | --- | --- |
 | **Android native app** | Yes: `Tag.getId()` for NfcA/B/F/V **[doc]** | MIFARE Classic *sector* access needs an NXP controller. **UID alone works on Broadcom/Samsung controllers too** **[field]** |
-| **Android, tap with app closed** | Yes: an `ACTION_TECH_DISCOVERED` filter in the manifest launches the app when a matching tag is tapped **[doc]** | Only fires when no NDEF app claims the tag first. Screen must be on and unlocked |
-| **Android Chrome (Web NFC)** | **Partly.** `NDEFReadingEvent.serialNumber` carries the UID **[doc]** | Fires only for tags that are NDEF or *NDEF-formattable*. Other tags get `readingerror` with no serial **[doc W3C]**. Many DESFire and (on NXP phones) Classic cards report `NdefFormatable` on Android, so they may work **[field → test]**. No technology label is reported |
+| **Android, tap with app closed** | Yes: an `ACTION_TECH_DISCOVERED` filter in the manifest launches the app when a matching tag is tapped **[doc]** | Only fires when no NDEF app claims the tag first. Screen usually must be unlocked. **Android 16:** the user is told the first time and can switch off "Launch via NFC". **Android 17:** the activity must require `DISPATCH_NFC_MESSAGE`, and never-opened or force-stopped apps get no tag intents **[doc]** |
+| **Android Chrome (Web NFC)** | **Partly.** `serialNumber` = `tag.getId()` as lowercase colon-hex **[source]** | Chrome only handles tags Android lists as `Ndef` or `NdefFormatable`. A formattable tag fires `reading` with an empty message and the serial. Everything else gets no `reading` **[source Chromium]**. YubiKeys are blocked outright **[source]**. A DESFire card has been reported as `NdefFormatable` **[field → test]**. No technology label is reported |
 | **iPhone app (Core NFC tag session)** | Yes for ISO 7816, ISO 15693, FeliCa and MIFARE (Ultralight, DESFire, Plus) **[doc]** | Foreground only, behind a system scan sheet. FeliCa system codes and ISO 7816 AIDs must be listed in Info.plist. **MIFARE Classic is unreliable or undetected** in tag sessions **[field]** |
 | **iPhone, tap with app closed** | No. Background reading only handles NDEF URL records **[doc]** | A bare transit card can never open anything on iOS without the user opening an app first |
 | **iOS Shortcuts NFC automation** | Internally, yes. Shortcuts matches tags by their identifier and ignores unregistered tags **[field]** | The user has to register each tag by hand, and the identifier is not passed to the shortcut. Proof that per-tag UID triggers are fine with Apple, but not an integration path |
@@ -72,7 +77,7 @@ Nobody publishes a neutral protocol that says what a UID can mean, in which scop
 
 ## 6. Legal and privacy
 
-- **Card ownership.** Many transit cards stay the property of the operator under their terms of use. ncNFC only reads what every reader sees during anti-collision and changes nothing, but registration should still state "cards you own or are allowed to reuse" (it already does). For each system, check its terms before recommending it publicly **[test]**.
+- **Card ownership.** Many transit cards stay the property of the operator under their terms of use. TfL's Conditions of Carriage, for example, say Oyster cards remain TfL's property and must not be "damaged, altered or tampered with" **[doc]**. ncNFC only reads what every reader sees during anti-collision and changes nothing, but registration should still state "cards you own or are allowed to reuse" (it already does). For each system, check its terms before recommending it publicly **[test]**.
 - **Personal data.** EU guidance treats RFID identifiers as personal data once they are linked to a person, and calls for privacy impact assessments (2009 RFID Recommendation, applied today through GDPR and ePrivacy). ncNFC's rules already match this: no UID in URLs or logs, keyed HMAC for indexes, deletion.
 - **Cloning.** Writable-UID "magic" cards and Flipper/Proxmark emulators can present any UID **[field]**. ncNFC never treats a UID as authentication. That stays non-negotiable.
 
@@ -101,5 +106,11 @@ Nobody publishes a neutral protocol that says what a UID can mean, in which scop
 - TeddyCloud / Tonies tag requirements: https://tonies-wiki.revvox.de/docs/tools/teddycloud/usage/custom-tags/
 - Metrodroid wiki: https://github.com/metrodroid/metrodroid/wiki
 - Shortcuts NFC automations: https://macmost.com/using-nfc-tags-and-tap-automations-to-trigger-shortcuts.html
+- Android NFC basics (Android 16/17 dispatch changes): https://developer.android.com/develop/connectivity/nfc/nfc
+- Chromium Web NFC Android sources: https://chromium.googlesource.com/chromium/src/+/main/services/device/nfc/android/java/src/org/chromium/device/nfc/
+- Phoniebox: https://github.com/MiczFlor/RPi-Jukebox-RFID
+- SecureIDNews, CharlieCard: https://www.secureidnews.com/news-item/bostons-new-contactless-charliecard-makes-commuting-easier-for-a-million-daily-riders/
+- Streetsblog Mass, new CharlieCard: https://mass.streetsblog.org/2025/12/15/we-tried-the-new-charliecard-heres-what-to-know
+- TfL Conditions of Carriage: https://foi.tfl.gov.uk/FOI-2242-1920/tfl-conditions-of-carriage.pdf
 - EU RFID Recommendation 2009/387/EC: https://eur-lex.europa.eu/eli/reco/2009/387/oj
 - Flipper magic cards: https://docs.flipper.net/nfc/magic-cards
